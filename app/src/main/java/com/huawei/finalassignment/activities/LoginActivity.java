@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "email:" + authAccount.getEmail());
                 Log.i(TAG, "openid:" + authAccount.getOpenId());
                 Log.i(TAG, "unionid:" + authAccount.getIdToken());
-                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                Intent intent = new Intent(LoginActivity.this,MapActivity.class);
                 account = new Account(authAccount.getDisplayName(),authAccount.getEmail(),authAccount.getAvatarUri().toString());
                 intent.putExtra("Account",account);
                 startActivity(intent);
