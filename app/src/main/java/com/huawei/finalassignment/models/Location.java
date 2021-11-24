@@ -1,27 +1,27 @@
 package com.huawei.finalassignment.models;
 
 public class Location {
-    String latitude;
-    String longitude;
+    Double Latitude;
+    Double Longitude;
 
-    public Location(String latitude, String longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Location(Double latitude, Double longitude) {
+        Latitude = latitude;
+        Longitude = longitude;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public Double getLatitude() {
+        return Latitude;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setLatitude(Double latitude) {
+        Latitude = latitude;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public Double getLongitude() {
+        return Longitude;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setLongitude(Double longitude) {
+        Longitude = longitude;
     }
 }

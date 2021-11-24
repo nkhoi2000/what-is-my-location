@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.huawei.finalassignment.R;
+import com.huawei.finalassignment.models.Location;
 import com.huawei.hms.maps.CameraUpdate;
 import com.huawei.hms.maps.HuaweiMap;
 import com.huawei.hms.maps.MapView;
@@ -26,6 +27,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapView mMapView;
     private HuaweiMap hMap;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +65,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         hMap = huaweiMap;
         hMap.setMyLocationEnabled(true);
         hMap.getUiSettings().setMyLocationButtonEnabled(true);
-        Log.d("HMap", "onMapReady: " + huaweiMap);
-        CameraPosition position = huaweiMap.getCameraPosition();
+        getCurrentLocation(huaweiMap);
+    }
+
+    private void getCurrentLocation(HuaweiMap huaweiMap) {
+        LatLng currentPos = huaweiMap.getCameraPosition().target;
+        currentLocation = new Location(currentPos.latitude, currentPos.longitude);
     }
 
     @Override
