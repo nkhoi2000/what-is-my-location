@@ -9,10 +9,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.huawei.finalassignment.R;
 import com.huawei.finalassignment.models.Location;
@@ -28,12 +31,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private HuaweiMap hMap;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private Location currentLocation;
-
+    private ImageView share;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        share = findViewById(R.id.img_btn_share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this,ScanActivity.class);
+                intent.putExtra("location",currentLocation);
+                startActivity(intent);
+            }
+        });
 
         mMapView = findViewById(R.id.mapview);
         Bundle mapViewBundle = null;

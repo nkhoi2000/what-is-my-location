@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void displayProfile(){
+    private void displayProfile() {
         txt_name.setText(account.getFullname());
         txt_full_name.setText(account.getFullname());
         txt_email.setText(account.getEmail());
