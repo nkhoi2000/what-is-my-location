@@ -56,13 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         task.addOnSuccessListener(new OnSuccessListener<AuthAccount>() {
             @Override
             public void onSuccess(AuthAccount authAccount) {
-//                The silent sign-in is successful. Process the returned account object AuthAccount to obtain the HUAWEI ID information.
-//                Log.i(TAG, "display name:" + authAccount.getDisplayName());
-//                Log.i(TAG, "photo uri string:" + authAccount.getAvatarUriString());
-//                Log.i(TAG, "photo uri:" + authAccount.getAvatarUri());
-//                Log.i(TAG, "email:" + authAccount.getEmail());
-//                Log.i(TAG, "openid:" + authAccount.getOpenId());
-//                Log.i(TAG, "unionid:" + authAccount.getIdToken());
                 Intent intent = new Intent(LoginActivity.this,MapActivity.class);
                 account = new Account(authAccount.getDisplayName(),authAccount.getEmail(),authAccount.getAvatarUri().toString());
                 intent.putExtra("Account",account);

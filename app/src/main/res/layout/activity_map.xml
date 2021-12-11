@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
-            android:background="#50C4CF">
+            android:background="#50C4CF"
+            android:paddingEnd="10sp">
 
             <LinearLayout
                 android:id="@+id/layout_action"

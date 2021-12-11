@@ -79,13 +79,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         toggle.syncState();
         navView.setNavigationItemSelectedListener(this);
         navView.setCheckedItem(R.id.menu_home);
+
         /*---buttons---*/
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MapActivity.this, ScanActivity.class);
-                intent.putExtra("location", currentLocation);
-                startActivity(intent);
+                if (currentLocation!= null){
+                    Intent intent = new Intent(MapActivity.this, ScanActivity.class);
+                    intent.putExtra("location", currentLocation);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "Cannot find your location!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -189,7 +194,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         switch (item.getItemId()) {
             case R.id.menu_profile:
                 //get intent
-                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
                 if (getIntent().hasExtra("Account")) {
                     account = getIntent().getParcelableExtra("Account");
                     Intent intent = new Intent(MapActivity.this, ProfileActivity.class);
@@ -201,6 +205,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             case R.id.menu_home:
                 break;
+            case R.id.menu_logout:
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
         }
         return true;
     }

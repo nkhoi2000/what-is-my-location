@@ -19,13 +19,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.huawei.finalassignment.R;
 import com.huawei.finalassignment.models.Account;
 
-public class ProfileActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener{
+public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Account account;
     private ImageView img_avatar;
     private TextView txt_full_name, txt_email, txt_name;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,7 @@ public class ProfileActivity extends AppCompatActivity implements  NavigationVie
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -91,6 +93,11 @@ public class ProfileActivity extends AppCompatActivity implements  NavigationVie
                 }
             case R.id.menu_profile:
                 break;
+            case R.id.menu_logout:
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
         }
         return true;
     }

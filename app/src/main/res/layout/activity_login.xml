@@ -39,15 +39,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_background"
-        android:gravity="center_horizontal"
-        android:paddingTop="60dp">
-        <!-- Define an ID for the button control. -->
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <com.huawei.hms.support.hwid.ui.HuaweiIdAuthButton
-            android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            app:hwid_color_policy="hwid_color_policy_blue" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="30dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_login_username"
+                android:drawablePadding="10sp"
+                android:hint="Username"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:drawableStart="@drawable/ic_login_password"
+                android:drawablePadding="10sp"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="60dp">
+            <!-- Define an ID for the button control. -->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/button_shape"
+                android:backgroundTint="@color/hwid_auth_button_color_blue"
+                android:text="Login"
+                android:textColor="@color/white" />
+
+            <com.huawei.hms.support.hwid.ui.HuaweiIdAuthButton
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/button_shape"
+                app:hwid_color_policy="hwid_color_policy_blue" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
