@@ -3,21 +3,31 @@ package com.huawei.finalassignment.activities;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_WIFI_STATE;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.huawei.finalassignment.R;
+import com.huawei.finalassignment.models.Account;
 import com.huawei.finalassignment.models.Location;
 import com.huawei.hms.maps.CameraUpdate;
 import com.huawei.hms.maps.HuaweiMap;
@@ -26,28 +36,70 @@ import com.huawei.hms.maps.OnMapReadyCallback;
 import com.huawei.hms.maps.model.CameraPosition;
 import com.huawei.hms.maps.model.LatLng;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+import java.util.concurrent.Executor;
+
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private MapView mMapView;
     private HuaweiMap hMap;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private Location currentLocation;
     private ImageView share;
+    private Account account;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navView;
+
+    @Override
+    public boolean bindIsolatedService(Intent service, int flags, String instanceName, Executor executor, ServiceConnection conn) {
+        return super.bindIsolatedService(service, flags, instanceName, executor, conn);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //assign variable
         share = findViewById(R.id.img_btn_share);
+        mMapView = findViewById(R.id.mapview);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navView = findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.toolbar);
+
+        //listener
+        /*---mapView---*/
+        getMapView(savedInstanceState);
+        /*---toolbar---*/
+        setSupportActionBar(toolbar);
+        /*---navView---*/
+        navView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        navView.setNavigationItemSelectedListener(this);
+        navView.setCheckedItem(R.id.menu_home);
+        /*---buttons---*/
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MapActivity.this,ScanActivity.class);
-                intent.putExtra("location",currentLocation);
+                Intent intent = new Intent(MapActivity.this, ScanActivity.class);
+                intent.putExtra("location", currentLocation);
                 startActivity(intent);
             }
         });
+    }
 
-        mMapView = findViewById(R.id.mapview);
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void getMapView(Bundle savedInstanceState) {
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle("MapViewBundleKey");
@@ -130,5 +182,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_profile:
+                //get intent
+                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+                if (getIntent().hasExtra("Account")) {
+                    account = getIntent().getParcelableExtra("Account");
+                    Intent intent = new Intent(MapActivity.this, ProfileActivity.class);
+                    intent.putExtra("Account", account);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Failed to load your profile!", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            case R.id.menu_home:
+                break;
+        }
+        return true;
     }
 }

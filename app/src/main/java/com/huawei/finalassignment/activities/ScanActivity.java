@@ -34,7 +34,7 @@ public class ScanActivity extends AppCompatActivity {
         }
         //get location to string
         locationString = location.toString();
-        //Assign variable
+        //assign variable
         iv_output = findViewById(R.id.iv_output);
         btn_back = findViewById(R.id.btn_back);
 
