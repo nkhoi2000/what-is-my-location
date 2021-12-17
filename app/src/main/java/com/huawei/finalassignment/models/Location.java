@@ -66,9 +66,6 @@ public class Location implements Parcelable {
 
     @Override
     public String toString() {
-        return "Location{" +
-                "Latitude=" + Latitude +
-                ", Longitude=" + Longitude +
-                '}';
+        return Latitude + "&" + Longitude;
     }
 }

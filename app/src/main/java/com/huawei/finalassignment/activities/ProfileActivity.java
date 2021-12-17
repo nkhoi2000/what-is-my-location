@@ -81,7 +81,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         switch (item.getItemId()) {
             case R.id.menu_home:
                 //get intent
-                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
                 if (getIntent().hasExtra("Account")) {
                     account = getIntent().getParcelableExtra("Account");
                     Intent intent = new Intent(ProfileActivity.this, MapActivity.class);

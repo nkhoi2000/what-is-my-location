@@ -6,40 +6,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.SplashActivity">
+
     <LinearLayout
         android:id="@+id/layout_logo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/vlu_logo"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:src="@drawable/vlu_logo" />
+
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/huawei_logo"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:src="@drawable/huawei_logo" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
+
         <LinearLayout
             android:id="@+id/layout_name"
-            android:paddingTop="250dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="250dp"
             android:transitionName="trans">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_location_on_24"/>
+                android:src="@drawable/ic_baseline_location_on_24" />
 
             <TextView
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="What is My Location?"
                 android:textColor="@color/black"
                 android:textSize="25dp" />

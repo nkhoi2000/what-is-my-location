@@ -16,8 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
             android:background="#50C4CF"
+            android:elevation="4dp"
             android:paddingEnd="10sp">
 
             <LinearLayout
@@ -25,6 +25,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="end">
+
+                <ImageView
+                    android:id="@+id/img_btn_scan"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/qr_scanner"
+                    android:layout_marginRight="10sp"/>
 
                 <ImageView
                     android:id="@+id/img_btn_share"
