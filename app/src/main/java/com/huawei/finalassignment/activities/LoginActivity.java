@@ -1,13 +1,16 @@
 package com.huawei.finalassignment.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.huawei.finalassignment.R;
 import com.huawei.finalassignment.models.Account;
@@ -25,49 +28,99 @@ public class LoginActivity extends AppCompatActivity {
     // Define the request code for signInIntent.
     private static final int REQUEST_CODE_SIGN_IN = 1000;
     // Define the log tag.
-    private static final String TAG = "Account";
-    private Account account;
+    private static final String TAG = "Account_Login";
+    private static final String[] RUNTIME_PERMISSION = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.CAMERA
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (!hasPermissions(this, RUNTIME_PERMISSION)) {
+            ActivityCompat.requestPermissions(this, RUNTIME_PERMISSION, 100);
+        }
         Button btn_login = findViewById(R.id.btn_login_username);
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Cannot find your username & password!", Toast.LENGTH_SHORT).show();
-            }
+
+        btn_login.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Cannot find your username & password!", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btn_login).setOnClickListener(v -> {
+            Log.d(TAG, "Login click!");
+            silentSignInByHwId();
         });
-        findViewById(R.id.btn_login).setOnClickListener(view -> silentSignInByHwId());
     }
 
     private void silentSignInByHwId() {
-        // 1. Use AccountAuthParams to specify the user information to be obtained, including the user ID (OpenID and UnionID), email address, and profile (nickname and picture).
-        // 2. By default, DEFAULT_AUTH_REQUEST_PARAM specifies two items to be obtained, that is, the user ID and profile.
-        // 3. If your app needs to obtain the user's email address, call setEmail().
-        // Set HUAWEI ID sign-in authorization parameters.
+        Log.d(TAG, "silentSignInByHwId: start");
         AccountAuthParams mAuthParam = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
                 .setEmail()
                 .createParams();
-        // Use AccountAuthParams to build AccountAuthService.
+        Log.d(TAG, "silentSignInByHwId: " + mAuthParam.toString());
         mAuthService = AccountAuthManager.getService(this, mAuthParam);
-        // Use silent sign-in to sign in with a HUAWEI ID.
-        Task<AuthAccount> task = mAuthService.silentSignIn();
-        task.addOnSuccessListener(authAccount -> {
-            Intent intent = new Intent(LoginActivity.this, MapActivity.class);
-            account = new Account(authAccount.getDisplayName(), authAccount.getEmail(), authAccount.getAvatarUri().toString());
-            intent.putExtra("Account", account);
-            startActivity(intent);
-            Toast.makeText(LoginActivity.this, "Hello " + authAccount.getDisplayName(), Toast.LENGTH_SHORT).show();
-        });
-        task.addOnFailureListener(e -> {
-            // The silent sign-in fails. Use the getSignInIntent() method to show the authorization or sign-in screen.
-            if (e instanceof ApiException) {
-                Intent signInIntent = mAuthService.getSignInIntent();
-                Log.i(TAG, "FAIL: " + e.getMessage());
-                startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
+        Intent sigInIntent = mAuthService.getSignInIntent();
+        startActivityForResult(sigInIntent, REQUEST_CODE_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // requested is checked to make that the activity that invoked passed the result.This can be any code
+
+        if (requestCode == REQUEST_CODE_SIGN_IN) {
+            Log.i(TAG, "onActivityResult of sigInInIntent, request code: " + REQUEST_CODE_SIGN_IN);
+            Task<AuthAccount> authAccountTask = AccountAuthManager.parseAuthResultFromIntent(data);
+            Log.d(TAG, "onActivityResult, authAccountTask status: " + authAccountTask.isSuccessful());
+            if (authAccountTask.isSuccessful()) {
+                // The sign-in is successful, and the authAccount object that contains the HUAWEI ID information is obtained.
+                AuthAccount authAccount = authAccountTask.getResult();
+                Log.i(TAG, "display:" + authAccount.getOpenId());
+
+                // when the user login successfully , i will get all the details and i am passing all to the next activity via the intent .
+                Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+                Account account = new Account(
+                        authAccount.getDisplayName(),
+                        authAccount.getEmail(),
+                        authAccount.getAvatarUri().toString());
+                intent.putExtra("Account", account);
+                startActivity(intent);
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Welcome " + authAccount.getDisplayName(),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // The sign-in fails. Find the failure cause from the status code. For more information, please refer to the "Error Codes" section in the API Reference.
+                Log.e(TAG, "sign in failed, status code : " + ((ApiException) authAccountTask.getException()).getStatusCode());
             }
-        });
+        }
+    }
+
+    /**
+     * @param context - the IPC context
+     * @return true if the IPC has the granted permission
+     */
+    public static boolean hasPermission(Context context, String permission) {
+        int res = context.checkCallingOrSelfPermission(permission);
+        Log.v(TAG, "permission: " + permission + " = \t\t" +
+                (res == PackageManager.PERMISSION_GRANTED ? "GRANTED" : "DENIED"));
+        return res == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * @param context     - the IPC context
+     * @param permissions - The permissions to check
+     * @return true if the IPC has the granted permission
+     */
+    public static boolean hasPermissions(Context context, String... permissions) {
+        boolean hasAllPermissions = true;
+        for (String permission : permissions) {
+            if (!hasPermission(context, permission)) {
+                hasAllPermissions = false;
+            }
+        }
+        return hasAllPermissions;
     }
 }
